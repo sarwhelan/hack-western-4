@@ -93,10 +93,9 @@ func (s *SmartContract) queryHouseAddress(APIstub shim.ChaincodeStubInterface, a
 	if len(args) != 1 {
 		return shim.Error("Incorrect number of arguments. Expecting 1")
 	}
-	key = args[0]
-	entryAsBytes, err := APIstub.GetState(key)
+	entryAsBytes, err := APIstub.GetState(args[0])
 		if err != nil {
-			return nil, fmt.Println("getState function failure" + err)
+			return shim.Error(err.Error())
 		}
 	fmt.Println(entryAsBytes)
 	return shim.Success(entryAsBytes)
@@ -146,8 +145,7 @@ func (s *SmartContract) queryAllOwners(APIstub shim.ChaincodeStubInterface) sc.R
 	resultsIterator, err := APIstub.GetStateByRange(startKey, endKey)
 
 	if err != nil {
-		return nil, err
-		// return shim.Error(err.Error())
+		return shim.Error(err.Error())
 	}
 
 	// buffer is a JSON array containing QueryResults
@@ -189,7 +187,7 @@ func (s *SmartContract) changeTreeQuantity(APIstub shim.ChaincodeStubInterface, 
 	}
 
 	entryAsBytes, _ := APIstub.GetState(args[0])
-	entry := Tree{}
+	entry := Car{}
 
 	json.Unmarshal(entryAsBytes, &entry)
 	entry.QuantiTREE = args[1]
@@ -208,4 +206,5 @@ func main() {
 	if err != nil {
 		fmt.Printf("Error creating new Smart Contract: %s", err)
 	}
+
 }
